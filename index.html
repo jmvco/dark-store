@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS - Descubre las Mejores Apps</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #00f5ff, #ff00f5, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: none;
+            animation: slideInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            animation: slideInUp 1s ease-out 0.3s both;
+        }
+
+        .search-bar {
+            position: relative;
+            max-width: 500px;
+            margin: 30px auto;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 18px 50px 18px 20px;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #00f5ff;
+            box-shadow: 0 8px 32px rgba(0, 245, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2rem;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            font-size: 0.9rem;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(45deg, #00f5ff, #ff00f5);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 245, 255, 0.4);
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .app-card:hover::before {
+            left: 100%;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(0, 245, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 245, 255, 0.2);
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-card:hover .app-icon {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 245, 255, 0.3);
+        }
+
+        .app-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .app-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .app-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feature-tag {
+            background: rgba(0, 245, 255, 0.2);
+            color: #00f5ff;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .app-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00ff88;
+        }
+
+        .app-price.free {
+            color: #00f5ff;
+        }
+
+        .install-btn {
+            background: linear-gradient(45deg, #00f5ff, #ff00f5);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .install-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .install-btn:hover::before {
+            left: 100%;
+        }
+
+        .install-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 245, 255, 0.4);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        .rating-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 245, 255, 0.1);
+            animation: float 8s ease-in-out infinite;
+            border: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .floating-circle:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+            background: rgba(255, 0, 245, 0.1);
+            border-color: rgba(255, 0, 245, 0.2);
+        }
+
+        .floating-circle:nth-child(2) {
+            width: 180px;
+            height: 180px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.2);
+        }
+
+        .floating-circle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 5% auto;
+            padding: 35px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+            backdrop-filter: blur(20px);
+            color: white;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #00f5ff;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .categories {
+                gap: 10px;
+            }
+
+            .category-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-elements">
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>DarkStore A1</h1>
+            <p>Aplicaciones modificadas verificadas y sin problemas</p>
+
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar apps modificadas..." id="searchInput">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+
+        <div class="categories">
+            <button class="category-btn active" data-category="all">Todas</button>
+            <button class="category-btn" data-category="media">Media</button>
+            <button class="category-btn" data-category="streaming">Streaming</button>
+            <button class="category-btn" data-category="social">Social</button>
+            <button class="category-btn" data-category="games">Juegos</button>
+            <button class="category-btn" data-category="tools">Herramientas</button>
+        </div>
+
+        <div class="apps-grid" id="appsGrid">
+            <!-- Las aplicaciones se generarán con JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+        style="background: rgba(0,0,0,0.3); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); padding: 40px 0; margin-top: 60px;">
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 30px;">
+                <div>
+                    <h3 style="color: #00f5ff; margin-bottom: 15px; font-size: 1.2rem;">DarkStore A1</h3>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.6; font-size: 0.9rem;">
+                        Aplicaciones modificadas verificadas y seguras. Todas las apps han sido testeadas y están libres
+                        de malware.
+                    </p>
+                </div>
+                <div>
+                    <h4 style="color: white; margin-bottom: 15px; font-size: 1rem;">Categorías</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Media
+                                & Video</a></li>
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Streaming</a>
+                        </li>
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Redes
+                                Sociales</a></li>
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Juegos</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: white; margin-bottom: 15px; font-size: 1rem;">Información</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Cómo
+                                instalar</a></li>
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Verificación
+                                A1</a></li>
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Seguridad</a>
+                        </li>
+                        <li style="margin-bottom: 8px;"><a href="#"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">Reportar
+                                problema</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: white; margin-bottom: 15px; font-size: 1rem;">Verificación</h4>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <span style="color: #00ff88; font-size: 1.2rem;">✓</span>
+                        <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Libre de malware</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <span style="color: #00ff88; font-size: 1.2rem;">✓</span>
+                        <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Testado en A1</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="color: #00ff88; font-size: 1.2rem;">✓</span>
+                        <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Actualizaciones regulares</span>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center;">
+                <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 10px;">
+                    © 2025 DarkStore A1. Solo para uso educativo y respaldo personal.
+                </p>
+                <p style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">
+                    ⚠️ Disclaimer: Estas aplicaciones son modificaciones no oficiales. Úsalas bajo tu propia
+                    responsabilidad.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="appModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const apps = [
+            {
+                name: "YouTube Vanced",
+                description: "YouTube sin anuncios, reproducción en segundo plano, modo oscuro AMOLED y control de velocidad avanzado.",
+                price: "Comprar",
+                rating: 4.8,
+                reviews: "2.5M",
+                category: "streaming",
+                features: ["Sin anuncios", "Fondo", "AMOLED", "Velocidad"],
+                image: "icon/youtube.png",
+                color: "#FF0000"
+            },
+            {
+                name: "Spotify Premium",
+                description: "Spotify con premium desbloqueado, música ilimitada, sin anuncios y calidad extrema sin restricciones.",
+                price: "Gratis",
+                rating: 4.7,
+                reviews: "1.8M",
+                category: "streaming",
+                features: ["Premium", "Sin anuncios", "Calidad extrema", "Ilimitado"],
+                image: "icon/spotify.png",
+                color: "#1DB954"
+            },
+            {
+                name: "Instagram Pro",
+                description: "Instagram con descarga de fotos/videos, sin anuncios, zoom de fotos de perfil y funciones premium.",
+                price: "Gratis",
+                rating: 4.6,
+                reviews: "1.2M",
+                category: "social",
+                features: ["Descarga", "Sin anuncios", "Zoom", "Premium"],
+                image: "icon/instagram.png",
+                color: "#E4405F"
+            },
+            {
+                name: "WhatsApp Plus",
+                description: "WhatsApp con temas personalizados, privacidad mejorada, estado extendido y funciones adicionales.",
+                price: "Gratis",
+                rating: 4.5,
+                reviews: "3.1M",
+                category: "social",
+                features: ["Temas", "Privacidad", "Estado largo", "Personalización"],
+                icon: "💬",
+                color: "#25D366"
+            },
+            {
+                name: "Netflix Premium",
+                description: "Netflix con todas las suscripciones desbloqueadas, 4K, sin restricciones regionales y contenido premium.",
+                price: "Gratis",
+                rating: 4.4,
+                reviews: "980K",
+                category: "streaming",
+                features: ["Premium", "4K", "Sin región", "Contenido completo"],
+                icon: "🎬",
+                color: "#E50914"
+            },
+            {
+                name: "TikTok Pro",
+                description: "TikTok sin anuncios, descarga de videos sin marca de agua, sin restricciones regionales y funciones extra.",
+                price: "Gratis",
+                rating: 4.6,
+                reviews: "2.2M",
+                category: "social",
+                features: ["Sin anuncios", "Descarga", "Sin marca", "Extra"],
+                icon: "🎭",
+                color: "#FE2C55"
+            },
+            {
+                name: "Telegram X Plus",
+                description: "Telegram con funciones premium, temas ilimitados, sin restricciones y características adicionales.",
+                price: "Gratis",
+                rating: 4.7,
+                reviews: "1.5M",
+                category: "social",
+                features: ["Premium", "Temas", "Sin límites", "Funciones extra"],
+                icon: "✈️",
+                color: "#0088CC"
+            },
+            {
+                name: "Adobe Premiere Pro",
+                description: "Editor de video profesional con todas las funciones premium, efectos, transiciones y exportación 4K.",
+                price: "Gratis",
+                rating: 4.5,
+                reviews: "650K",
+                category: "media",
+                features: ["Pro", "4K", "Efectos", "Transiciones"],
+                icon: "🎞️",
+                color: "#9999FF"
+            },
+            {
+                name: "Canva Pro",
+                description: "Herramienta de diseño con elementos premium, plantillas ilimitadas, fondos transparentes y más.",
+                price: "Gratis",
+                rating: 4.6,
+                reviews: "890K",
+                category: "media",
+                features: ["Pro", "Plantillas", "Transparente", "Ilimitado"],
+                icon: "🎨",
+                color: "#00C4CC"
+            },
+            {
+                name: "Minecraft Premium",
+                description: "Minecraft con todas las características premium, skins, mods, mapas y contenido completo desbloqueado.",
+                price: "Gratis",
+                rating: 4.8,
+                reviews: "1.9M",
+                category: "games",
+                features: ["Premium", "Skins", "Mods", "Mapas"],
+                icon: "🧱",
+                color: "#62B47A"
+            },
+            {
+                name: "Discord Nitro",
+                description: "Discord con Nitro activado, emojis personalizados, mejor calidad de stream y funciones premium.",
+                price: "Gratis",
+                rating: 4.5,
+                reviews: "1.1M",
+                category: "social",
+                features: ["Nitro", "Emojis", "HD Stream", "Premium"],
+                icon: "🎮",
+                color: "#5865F2"
+            },
+            {
+                name: "PowerDirector Pro",
+                description: "Editor de video profesional con efectos premium, transiciones, chroma key y exportación sin marca.",
+                price: "Gratis",
+                rating: 4.4,
+                reviews: "720K",
+                category: "media",
+                features: ["Pro", "Chroma", "Efectos", "Sin marca"],
+                icon: "📹",
+                color: "#FF6B35"
+            },
+            {
+                name: "Kinemaster Pro",
+                description: "Editor de video móvil con herramientas profesionales, sin marca de agua y exportación en alta calidad.",
+                price: "Gratis",
+                rating: 4.6,
+                reviews: "1.4M",
+                category: "media",
+                features: ["Pro", "Sin marca", "HD", "Profesional"],
+                icon: "🎬",
+                color: "#FF4444"
+            },
+            {
+                name: "Duolingo Plus",
+                description: "Duolingo con Plus activado, vidas ilimitadas, sin anuncios, lecciones offline y características premium.",
+                price: "Gratis",
+                rating: 4.7,
+                reviews: "1.3M",
+                category: "tools",
+                features: ["Plus", "Vidas ilimitadas", "Sin anuncios", "Offline"],
+                icon: "🦉",
+                color: "#58CC02"
+            },
+            {
+                name: "Roblox Mod",
+                description: "Roblox con modificaciones, Robux ilimitados, funciones premium y acceso a contenido exclusivo.",
+                price: "Gratis",
+                rating: 4.3,
+                reviews: "2.7M",
+                category: "games",
+                features: ["Robux", "Premium", "Exclusivo", "Mods"],
+                icon: "🎮",
+                color: "#FF0000"
+            },
+            {
+                name: "VLC Media Player Pro",
+                description: "VLC con funciones premium, codecs adicionales, interfaz mejorada y reproducción optimizada.",
+                price: "Gratis",
+                rating: 4.8,
+                reviews: "1.6M",
+                category: "media",
+                features: ["Pro", "Codecs", "Optimizado", "Mejorado"],
+                icon: "🎵",
+                color: "#FF8800"
+            }
+        ];
+
+        function createAppCard(app) {
+            const stars = '★'.repeat(Math.floor(app.rating)) + '☆'.repeat(5 - Math.floor(app.rating));
+
+            return `
+                <div class="app-card" data-category="${app.category}" onclick="showAppDetails('${app.name}')">
+                    <div class="app-icon">
+    <img src="${app.image}" alt="${app.name}" style="width: 100%; height: 100%; border-radius: 20px; object-fit: cover;">
+</div>
+
+                    <div class="rating">
+                        <div class="stars">${stars}</div>
+                        <div class="rating-text">${app.rating} (${app.reviews})</div>
+                    </div>
+                    <h3 class="app-name">${app.name}</h3>
+                    <p class="app-description">${app.description}</p>
+                    <div class="app-features">
+                        ${app.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                    </div>
+                    <div class="app-actions">
+                        <div class="app-price free">${app.price}</div>
+                        <button class="install-btn" onclick="event.stopPropagation(); installApp('${app.name}')">
+                            🔓 Instalar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderApps(appsToRender = apps) {
+            const appsGrid = document.getElementById('appsGrid');
+            appsGrid.innerHTML = appsToRender.map(createAppCard).join('');
+
+            // Animación de entrada
+            const cards = appsGrid.querySelectorAll('.app-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        function filterApps(category) {
+            const filteredApps = category === 'all' ? apps : apps.filter(app => app.category === category);
+            renderApps(filteredApps);
+        }
+
+        function searchApps(query) {
+            const filteredApps = apps.filter(app =>
+                app.name.toLowerCase().includes(query.toLowerCase()) ||
+                app.description.toLowerCase().includes(query.toLowerCase()) ||
+                app.features.some(feature => feature.toLowerCase().includes(query.toLowerCase()))
+            );
+            renderApps(filteredApps);
+        }
+
+        function showAppDetails(appName) {
+            const app = apps.find(a => a.name === appName);
+            const modal = document.getElementById('appModal');
+            const modalContent = document.getElementById('modalContent');
+
+            modalContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="width: 100px; height: 100px; border-radius: 20px; overflow: hidden; margin: 0 auto 20px;">
+  <img src="${app.image}" alt="${app.name}" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+
+                    <h2>${app.name}</h2>
+                    <div class="rating" style="justify-content: center; margin: 10px 0;">
+                        <div class="stars">${'★'.repeat(Math.floor(app.rating))}${'☆'.repeat(5 - Math.floor(app.rating))}</div>
+                        <div class="rating-text">${app.rating} (${app.reviews})</div>
+                    </div>
+                </div>
+                <p style="margin-bottom: 20px; line-height: 1.6; color: rgba(255,255,255,0.8);">${app.description}</p>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 10px; color: white;">Características principales:</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${app.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                    <div class="app-price ${app.price === 'Gratis' ? 'free' : ''}" style="font-size: 1.5rem;">${app.price}</div>
+                    <button class="install-btn" style="padding: 15px 30px; font-size: 1.1rem;" onclick="installApp('${app.name}')">
+                        ${app.price === 'Gratis' ? 'Instalar' : 'Comprar'}
+                    </button>
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        function installApp(appName) {
+            // Mostrar mensaje de instalación más realista para apps mod
+            const messages = [
+                "🔓 Desbloqueando características premium...",
+                "⚡ Aplicando modificaciones...",
+                "🛡️ Verificando seguridad A1...",
+                "✅ Listo para instalar!"
+            ];
+
+            let currentMessage = 0;
+            const interval = setInterval(() => {
+                if (currentMessage < messages.length) {
+                    // Crear notificación temporal
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: rgba(0,245,255,0.1);
+                        border: 1px solid rgba(0,245,255,0.3);
+                        color: white;
+                        padding: 15px 20px;
+                        border-radius: 12px;
+                        backdrop-filter: blur(20px);
+                        z-index: 10000;
+                        font-size: 0.9rem;
+                        animation: slideInRight 0.3s ease-out;
+                    `;
+                    notification.textContent = messages[currentMessage];
+                    document.body.appendChild(notification);
+
+                    // Remover notificación después de 1 segundo
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 1000);
+
+                    currentMessage++;
+                } else {
+                    clearInterval(interval);
+                    // Mensaje final
+                    alert(`🚀 ${appName} instalado exitosamente!\n\n✅ Verificado A1\n🔓 Funciones premium activadas\n⚠️ Recuerda: Usa bajo tu propia responsabilidad`);
+                }
+            }, 1200);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApps();
+
+            // Filtros de categoría
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    filterApps(e.target.dataset.category);
+                });
+            });
+
+            // Búsqueda
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchApps(e.target.value);
+            });
+
+            // Modal
+            document.querySelector('.close').addEventListener('click', () => {
+                document.getElementById('appModal').style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                const modal = document.getElementById('appModal');
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
